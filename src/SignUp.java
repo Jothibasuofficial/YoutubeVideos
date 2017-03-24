@@ -1,21 +1,16 @@
 
 
 import java.io.IOException;
-//import java.io.PrintWriter;
+import java.io.PrintWriter;
 
-//import javax.servlet.RequestDispatcher;
-//import javax.servlet.ServletContext;
-//import javax.servlet.ServletContextAttributeEvent;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//import demo.DemoModel;
-import demo.DemoDAO;
+import demo.NewUser;
 
-
-//import java.sql.SQLException;
 
 
 @WebServlet("/SignUp")
@@ -26,17 +21,24 @@ public class SignUp extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		//PrintWriter out = response.getWriter();
-		String name = request.getParameter("name");
+		PrintWriter out = response.getWriter();
+		String username = request.getParameter("name");
 		String email = request.getParameter("email");
 		String password = request.getParameter("pass1");
 		String rePassword = request.getParameter("pass2");
 		
 		//Inserting the values into database
-		DemoDAO DaoObj = new DemoDAO();
 		try {
-			DaoObj.DemoInsert(name, email, password,rePassword);
-		} catch (ClassNotFoundException e) {
+			int value = NewUser.adduser(username, email, password, rePassword);
+			if (value==1) {
+                RequestDispatcher rs = request.getRequestDispatcher("signup.html");
+        		rs.forward(request, response);
+        		 out.println("<p>successfull Registration</p>");
+            } 
+            else {
+                out.println("Unsuccessfull Registration");
+            }
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

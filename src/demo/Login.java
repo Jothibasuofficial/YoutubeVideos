@@ -2,27 +2,30 @@ package demo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 public class Login {
 	
-	public void LoginCheck(String email,String password) throws ClassNotFoundException
+	public static boolean LoginCheck(String username,String password) throws ClassNotFoundException
 	{
+		boolean userAvailable =false;
 		
-			ConnectionUtil connection = new ConnectionUtil(); 
-			Connection conn = connection.getConnectionUtil();
+			Connection conn = ConnectionUtil.getConnectionUtil();
 			PreparedStatement pst;
 			try {
-				pst = conn.prepareStatement("select email,password from userdetails where email=? and password=?");
-				pst.setString(1, email);
+				pst = conn.prepareStatement("select username,userpassword from signup where username=? and userpassword=?");
+				pst.setString(1, username);
 				pst.setString(2, password);
-				pst.executeUpdate(); 
+				ResultSet rs =pst.executeQuery(); 
+				userAvailable = rs.next();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-	       
+	       return userAvailable;
 		
 	}
 
